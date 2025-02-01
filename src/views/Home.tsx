@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { getSearchResults } from '../services/api';
 
 class Home extends Component {
   constructor(props: object) {
@@ -10,6 +11,28 @@ class Home extends Component {
       throwError: false,
     };
   }
+
+  componentDidMount(): void {
+    const searchValue = '';
+    this.setState({ searchValue }, () => {
+      this.performsearch(searchValue);
+    });
+  }
+
+  performsearch = async (value: string) => {
+    this.setState({ isLoading: true });
+    try {
+      const response = await getSearchResults(value);
+      const results = response.results;
+      if (Array.isArray(results)) {
+        this.setState({ results });
+      }
+    } catch (error) {
+      console.error('Failed to fetch items:', error);
+    } finally {
+      this.setState({ isLoading: false });
+    }
+  };
 
   render(): React.ReactNode {
     return (
