@@ -1,6 +1,7 @@
 import Input from '../input/Input';
 import Button from '../button/Button';
 import { Component } from 'react';
+import { getFromLocal } from '../hooks/localstorage';
 
 interface State {
   searchValue: string;
@@ -17,6 +18,10 @@ class SearchBar extends Component<Props, State> {
     createError: false,
   };
 
+  componentDidMount(): void {
+    this.setState({ searchValue: getFromLocal('searchInput') });
+  }
+
   componentDidUpdate(): void {
     if (this.state.createError) {
       throw new Error('Clicked Error Button');
@@ -24,6 +29,7 @@ class SearchBar extends Component<Props, State> {
   }
 
   handleSearch = () => {
+    console.log(typeof this.state.searchValue);
     this.props.action(this.state.searchValue);
     localStorage.setItem('searchInput', JSON.stringify(this.state.searchValue));
   };

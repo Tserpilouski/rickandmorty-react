@@ -1,3 +1,5 @@
-export function getFromLocal(key: string): string | null {
-  return localStorage.getItem(key) || null;
+export function getFromLocal(key: string): string {
+  const value = localStorage.getItem(key);
+  if (!value) return '';
+  return JSON.parse(value);
 }

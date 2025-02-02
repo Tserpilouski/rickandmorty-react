@@ -22,7 +22,7 @@ class Home extends Component<object, HomeState> {
   componentDidMount(): void {
     const searchInput = getFromLocal('searchInput');
     if (searchInput) {
-      this.performsearch(JSON.parse(searchInput));
+      this.performsearch(searchInput);
     } else {
       this.performsearch('');
     }
