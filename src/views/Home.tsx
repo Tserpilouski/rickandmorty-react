@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { getSearchResults } from '../services/api';
-import Button from '../components/button/Button';
-import Input from '../components/input/Input';
+import SearchBar from '../components/searchBar/SearchBar';
+import Card from '../components/card/Card';
 
 interface HomeState {
   searchValue: string;
-  results: any[];
+  results: any;
   isLoading: boolean;
   throwError: boolean;
 }
 
-class Home extends Component<HomeState> {
+class Home extends Component<object, HomeState> {
   state = {
     searchValue: '',
-    results: [],
+    results: null,
     isLoading: false,
     throwError: false,
   };
@@ -40,26 +40,26 @@ class Home extends Component<HomeState> {
     }
   };
 
-  showConsole = () => {
-    console.log(this.state.searchValue);
-  };
-
   inputchange = (newSearch: string) => {
+    console.log(newSearch);
+    this.performsearch(newSearch);
     this.setState({ searchValue: newSearch });
   };
 
-  render(): React.ReactNode {
+  render() {
     return (
       <>
         <div>
           <h1>Main page</h1>
-          <Input onChange={this.inputchange} value={this.state.searchValue} />
-          <Button action={this.showConsole} name="Hello" />
+          <SearchBar action={this.inputchange} />
         </div>
         <div>
           <h2>Results</h2>
           <div>
             <p>no results</p>
+            {this.state.results.map((item, key) => (
+              <Card key={key} item={item} />
+            ))}
           </div>
         </div>
       </>
