@@ -2,16 +2,16 @@ import Input from '../input/Input';
 import Button from '../button/Button';
 import { Component } from 'react';
 
-interface SearchBarState {
+interface State {
   searchValue: string;
   createError: boolean;
 }
 
-interface SearchBarProps {
+interface Props {
   action: (search: string) => void;
 }
 
-class SearchBar extends Component<SearchBarProps, SearchBarState> {
+class SearchBar extends Component<Props, State> {
   state = {
     searchValue: '',
     createError: false,
@@ -25,6 +25,7 @@ class SearchBar extends Component<SearchBarProps, SearchBarState> {
 
   handleSearch = () => {
     this.props.action(this.state.searchValue);
+    localStorage.setItem('searchInput', JSON.stringify(this.state.searchValue));
   };
 
   inputChange = (newSearch: string) => {

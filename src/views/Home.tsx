@@ -4,27 +4,28 @@ import SearchBar from '../components/searchBar/SearchBar';
 import Card from '../components/card/Card';
 
 import { Character } from '../types/api';
+import { getFromLocal } from '../components/hooks/localstorage';
 
 interface HomeState {
-  searchValue: string;
-  results: Character[];
+  characters: Character[];
   isLoading: boolean;
   throwError: boolean;
 }
 
 class Home extends Component<object, HomeState> {
   state = {
-    searchValue: '',
-    results: [],
+    characters: [],
     isLoading: false,
     throwError: false,
   };
 
   componentDidMount(): void {
-    const searchValue = '';
-    this.setState({ searchValue }, () => {
-      this.performsearch(searchValue);
-    });
+    const searchInput = getFromLocal('searchInput');
+    if (searchInput) {
+      this.performsearch(JSON.parse(searchInput));
+    } else {
+      this.performsearch('');
+    }
   }
 
   performsearch = async (value: string) => {
@@ -32,22 +33,19 @@ class Home extends Component<object, HomeState> {
     try {
       const response = await getSearchResults(value);
       const results = response.results;
-      console.log(results);
       if (Array.isArray(results)) {
-        this.setState({ results });
+        this.setState({ characters: results });
       }
     } catch (error) {
       console.error(error);
-      this.setState({ results: [] });
+      this.setState({ characters: [] });
     } finally {
       this.setState({ isLoading: false });
     }
   };
 
-  inputchange = (newSearch: string) => {
-    console.log(newSearch);
-    this.performsearch(newSearch);
-    this.setState({ searchValue: newSearch });
+  inputchange = (search: string) => {
+    this.performsearch(search);
   };
 
   render() {
@@ -60,8 +58,8 @@ class Home extends Component<object, HomeState> {
         <div>
           <h2>Results</h2>
           <div>
-            {this.state.results.length > 0 ? (
-              this.state.results.map((item, key) => (
+            {this.state.characters.length > 0 ? (
+              this.state.characters.map((item, key) => (
                 <Card key={key} item={item} />
               ))
             ) : (

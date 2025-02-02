@@ -7,8 +7,7 @@ interface InputProps {
 
 class Input extends Component<InputProps> {
   handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    this.props.onChange(value);
+    this.props.onChange(e.target.value);
   };
 
   render() {

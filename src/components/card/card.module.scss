@@ -1,0 +1,26 @@
+.card {
+  display: flex;
+  padding: 1rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  background-color: antiquewhite;
+  border-radius: 2rem;
+
+  &_img {
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+  }
+
+  &_list {
+    color: black;
+  }
+}
+
+.description {
+  list-style: none;
+
+  & > * {
+    color: black;
+    text-align: start;
+  }
+}
