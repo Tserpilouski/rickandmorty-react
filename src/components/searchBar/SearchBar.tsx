@@ -4,6 +4,7 @@ import { Component } from 'react';
 
 interface SearchBarState {
   searchValue: string;
+  createError: boolean;
 }
 
 interface SearchBarProps {
@@ -13,7 +14,15 @@ interface SearchBarProps {
 class SearchBar extends Component<SearchBarProps, SearchBarState> {
   state = {
     searchValue: '',
+    createError: false,
   };
+
+  componentDidUpdate(): void {
+    if (this.state.createError) {
+      throw new Error('Clicked Error Button');
+    }
+  }
+
   handleSearch = () => {
     this.props.action(this.state.searchValue);
   };
@@ -27,6 +36,9 @@ class SearchBar extends Component<SearchBarProps, SearchBarState> {
       <div>
         <Input onChange={this.inputChange} value={this.state.searchValue} />
         <Button action={this.handleSearch} name="Search" />
+        <button onClick={() => this.setState({ createError: true })}>
+          Error
+        </button>
       </div>
     );
   }

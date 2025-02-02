@@ -23,9 +23,20 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     console.error('Error caught by ErrorBoundary:', error, errorInfo);
   }
 
+  handleReset = () => {
+    this.setState({
+      hasError: false,
+    });
+  };
+
   render() {
     if (this.state.hasError) {
-      return <h1>Something went wrong.</h1>;
+      return (
+        <div>
+          <h1>Something went wrong.</h1>
+          <button onClick={this.handleReset}>Reload page</button>
+        </div>
+      );
     }
 
     return this.props.children;

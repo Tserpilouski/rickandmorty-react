@@ -3,9 +3,11 @@ import { getSearchResults } from '../services/api';
 import SearchBar from '../components/searchBar/SearchBar';
 import Card from '../components/card/Card';
 
+import { Character } from '../types/api';
+
 interface HomeState {
   searchValue: string;
-  results: any;
+  results: Character[];
   isLoading: boolean;
   throwError: boolean;
 }
@@ -13,7 +15,7 @@ interface HomeState {
 class Home extends Component<object, HomeState> {
   state = {
     searchValue: '',
-    results: null,
+    results: [],
     isLoading: false,
     throwError: false,
   };
@@ -30,11 +32,13 @@ class Home extends Component<object, HomeState> {
     try {
       const response = await getSearchResults(value);
       const results = response.results;
+      console.log(results);
       if (Array.isArray(results)) {
         this.setState({ results });
       }
     } catch (error) {
-      console.error('Failed to fetch items:', error);
+      console.error(error);
+      this.setState({ results: [] });
     } finally {
       this.setState({ isLoading: false });
     }
@@ -56,10 +60,13 @@ class Home extends Component<object, HomeState> {
         <div>
           <h2>Results</h2>
           <div>
-            <p>no results</p>
-            {this.state.results.map((item, key) => (
-              <Card key={key} item={item} />
-            ))}
+            {this.state.results.length > 0 ? (
+              this.state.results.map((item, key) => (
+                <Card key={key} item={item} />
+              ))
+            ) : (
+              <p>sorry</p>
+            )}
           </div>
         </div>
       </>
