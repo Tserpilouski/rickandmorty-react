@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { getSearchResults } from '../services/api';
+import { searchService } from '../services/api';
 import SearchBar from '../components/searchBar/SearchBar';
 import Card from '../components/card/Card';
 
@@ -9,12 +9,14 @@ import { getFromLocal } from '../components/hooks/localstorage';
 interface State {
   characters: Character[];
   isLoading: boolean;
+  errorMessage: string | null;
 }
 
 class Home extends Component<object, State> {
   state = {
     characters: [],
     isLoading: false,
+    errorMessage: null,
   };
 
   componentDidMount(): void {
@@ -27,18 +29,41 @@ class Home extends Component<object, State> {
   }
 
   performsearch = async (value: string) => {
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, errorMessage: null });
+    // try {
+    //   const response = await getSearchResults(value);
+    //   const results = response.results;
+    //   if (Array.isArray(results)) {
+    //     this.setState({ characters: results });
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    //   this.setState({ characters: [] });
+    // } finally {
+    //   this.setState({ isLoading: false });
+    // }
     try {
-      const response = await getSearchResults(value);
+      const response = await searchService.getSearchResults(value);
       const results = response.results;
+
       if (Array.isArray(results)) {
         this.setState({ characters: results });
+      } else {
+        this.setState({ characters: [] });
       }
     } catch (error) {
-      console.error(error);
-      this.setState({ characters: [] });
+      console.error('Ошибка при выполнении поиска:', error);
+
+      // Устанавливаем сообщение об ошибке в состояние
+      if (error instanceof Error) {
+        this.setState({ errorMessage: error.message });
+      } else {
+        this.setState({ errorMessage: 'Произошла неизвестная ошибка.' });
+      }
+
+      this.setState({ characters: [] }); // Очищаем результаты
     } finally {
-      this.setState({ isLoading: false });
+      this.setState({ isLoading: false }); // Снимаем состояние загрузки
     }
   };
 
@@ -47,6 +72,8 @@ class Home extends Component<object, State> {
   };
 
   render() {
+    const { characters, isLoading, errorMessage } = this.state;
+
     return (
       <>
         <div>
@@ -56,12 +83,13 @@ class Home extends Component<object, State> {
         <div>
           <h2>Results</h2>
           <div>
-            {this.state.characters.length > 0 ? (
-              this.state.characters.map((item: Character) => (
-                <Card key={item.id} item={item} />
-              ))
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+            {isLoading ? (
+              <p>Loading....</p>
             ) : (
-              <p>sorry</p>
+              characters.map((item: Character) => (
+                <Card item={item} key={item.id} />
+              ))
             )}
           </div>
         </div>
