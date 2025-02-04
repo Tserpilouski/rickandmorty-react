@@ -6,17 +6,15 @@ import Card from '../components/card/Card';
 import { Character } from '../types/api';
 import { getFromLocal } from '../components/hooks/localstorage';
 
-interface HomeState {
+interface State {
   characters: Character[];
   isLoading: boolean;
-  throwError: boolean;
 }
 
-class Home extends Component<object, HomeState> {
+class Home extends Component<object, State> {
   state = {
     characters: [],
     isLoading: false,
-    throwError: false,
   };
 
   componentDidMount(): void {
@@ -59,8 +57,8 @@ class Home extends Component<object, HomeState> {
           <h2>Results</h2>
           <div>
             {this.state.characters.length > 0 ? (
-              this.state.characters.map((item, key) => (
-                <Card key={key} item={item} />
+              this.state.characters.map((item: Character) => (
+                <Card key={item.id} item={item} />
               ))
             ) : (
               <p>sorry</p>

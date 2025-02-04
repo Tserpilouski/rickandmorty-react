@@ -3,6 +3,8 @@ interface Location {
   url: string;
 }
 
+type URL = string;
+
 export interface Character {
   id: number;
   name: string;
@@ -13,7 +15,7 @@ export interface Character {
   origin: Location;
   location: Location;
   image: string;
-  episode: string[];
+  episode: URL[];
   url: string;
   created: string;
 }
