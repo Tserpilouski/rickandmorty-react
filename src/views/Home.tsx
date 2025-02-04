@@ -30,18 +30,6 @@ class Home extends Component<object, State> {
 
   performsearch = async (value: string) => {
     this.setState({ isLoading: true, errorMessage: null });
-    // try {
-    //   const response = await getSearchResults(value);
-    //   const results = response.results;
-    //   if (Array.isArray(results)) {
-    //     this.setState({ characters: results });
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    //   this.setState({ characters: [] });
-    // } finally {
-    //   this.setState({ isLoading: false });
-    // }
     try {
       const response = await searchService.getSearchResults(value);
       const results = response.results;
@@ -53,17 +41,15 @@ class Home extends Component<object, State> {
       }
     } catch (error) {
       console.error('Ошибка при выполнении поиска:', error);
-
-      // Устанавливаем сообщение об ошибке в состояние
       if (error instanceof Error) {
         this.setState({ errorMessage: error.message });
       } else {
         this.setState({ errorMessage: 'Произошла неизвестная ошибка.' });
       }
 
-      this.setState({ characters: [] }); // Очищаем результаты
+      this.setState({ characters: [] });
     } finally {
-      this.setState({ isLoading: false }); // Снимаем состояние загрузки
+      this.setState({ isLoading: false });
     }
   };
 
